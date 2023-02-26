@@ -5,11 +5,11 @@ import java.net.URL;
 import java.util.Date;
 
 @Entity
-@Table(name="photo", schema="photo_album", uniqueConstraints = {@UniqueConstraint(columnNames="album_id")})
+@Table(name="photo", schema="photo_album", uniqueConstraints = {@UniqueConstraint(columnNames="photo_id")})
 public class Photo {
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id")
     private Album album;
 

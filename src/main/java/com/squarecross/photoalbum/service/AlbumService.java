@@ -1,7 +1,10 @@
 package com.squarecross.photoalbum.service;
 
 import com.squarecross.photoalbum.domain.Album;
+import com.squarecross.photoalbum.dto.AlbumDto;
+import com.squarecross.photoalbum.mapper.AlbumMapper;
 import com.squarecross.photoalbum.repository.AlbumRepository;
+import com.squarecross.photoalbum.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
@@ -13,10 +16,15 @@ public class AlbumService {
     @Autowired
     private AlbumRepository albumRepository;
 
-    public Album getAlbum(Long albumId){
+    @Autowired
+    private PhotoRepository photoRepository;
+
+    public AlbumDto getAlbum(Long albumId){
         Optional<Album> res = albumRepository.findById(albumId);
         if(res.isPresent()){
-            return res.get();
+            AlbumDto albumDto = AlbumMapper.convertToDto(res.get());
+            albumDto.setCount(photoRepository.countByAlbum_AlbumId(albumId));
+            return albumDto;
         }else{
             throw new EntityNotFoundException(String.format("앨범아이디 %d의 데이터가 없습니다.", albumId));
         }
@@ -31,4 +39,10 @@ public class AlbumService {
             throw new EntityNotFoundException(String.format("앨범아이디 %d의 데이터가 없습니다.", name));
         }
     }
+
+    //albumdto 객체를 album 객체로 반환한다.
+    //album 객체를 db에 저장한다.
+    //photos/original, photos/thumbnail 디렉토리 내 신규 앨범 디렉토리 생성
+    //생성한 앨범 정보 dto로 변환하여 controller에 출력함
+
 }

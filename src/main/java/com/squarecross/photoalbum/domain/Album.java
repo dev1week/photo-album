@@ -17,16 +17,19 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "album_id", unique = true, nullable = false)
     private Long albumId;
-    @Column(name="album_name", unique = false,nullable=false)
+
+    @Column(name = "album_name", unique = false, nullable = false)
     private String albumName;
 
-    @Column(name="created_at", unique=false, nullable=true)
+    @Column(name="created_at", unique = false, nullable = true)
     @CreationTimestamp
     private Date createdAt;
 
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="album")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "album", cascade = CascadeType.ALL)
     private List<Photo> photos;
+
+
+
     public Album() {
     };
 
@@ -53,4 +56,6 @@ public class Album {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+
 }
